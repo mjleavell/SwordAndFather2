@@ -17,11 +17,10 @@ namespace SwordAndFather2.Data
             //_users.Add(newUser);
             //return newUser;
 
-            var connection = new SqlConnection(ConnectionString);
-            connection.Open();
-
-            try
+            using (var connection = new SqlConnection(ConnectionString)) //IDisposable (using statement is basically a try finally calling IDisposable)
             {
+      
+                connection.Open();
                 var insertUserCommand = connection.CreateCommand();
                 insertUserCommand.CommandText = $@"Insert into users (username, password)
                                             Output inserted.*
@@ -40,14 +39,9 @@ namespace SwordAndFather2.Data
                     return newUser;
                 }
             }
-            finally //any code inside finally will also be executed regardless of whether an exception is thrown or not
-            {
-                connection.Close();
-            }
-
 
             throw new Exception("No user found");
-
+       
         }
 
         public List<User> GetAll()
