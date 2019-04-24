@@ -20,7 +20,7 @@ namespace SwordAndFather2.Controllers
         [HttpPost("register")]
         public ActionResult AddUser(CreateUserRequest createRequest)
         {
-            if (_validator.Validate(createRequest))
+            if (!_validator.Validate(createRequest))
             {
                 return BadRequest(new { error = "users must have a username and password" });
             }
@@ -44,7 +44,7 @@ namespace SwordAndFather2.Controllers
     {
         public bool Validate(CreateUserRequest requestToValidate)
         {
-            return string.IsNullOrEmpty(requestToValidate.Username)
+            return !string.IsNullOrEmpty(requestToValidate.Username)
                    || string.IsNullOrEmpty(requestToValidate.Password);
         }
     }
