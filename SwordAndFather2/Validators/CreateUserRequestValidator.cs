@@ -6,7 +6,7 @@ namespace SwordAndFather2.Validators
     {
         public bool Validate(CreateUserRequest requestToValidate)
         {
-            return !(string.IsNullOrEmpty(requestToValidate.Username)
+            return (string.IsNullOrEmpty(requestToValidate.Username)
                    || string.IsNullOrEmpty(requestToValidate.Password));
         }
     }

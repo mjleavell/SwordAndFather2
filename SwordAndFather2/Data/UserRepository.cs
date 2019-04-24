@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using SwordAndFather2.Models;
 
@@ -6,23 +7,50 @@ namespace SwordAndFather2.Data
 {
     public class UserRepository
     {
-        static List<User> _users = new List<User>();
+        //static List<User> _users = new List<User>();
+        const string ConnectionString = "Server=localhost;Database=Sword&Father;Trusted_Connection=True"; //field
 
         public User AddUser(string username, string password)
         {
-            var newUser = new User(username, password);
+            //var newUser = new User(username, password);
+            //newUser.Id = _users.Count + 1;
+            //_users.Add(newUser);
+            //return newUser;
 
-            newUser.Id = _users.Count + 1;
+            using (var connection = new SqlConnection(ConnectionString)) //IDisposable (using statement is basically a try finally calling IDisposable)
+            {
+      
+                connection.Open();
+                var insertUserCommand = connection.CreateCommand();
+                insertUserCommand.CommandText = @"Insert into users (username, password)
+                                            Output inserted.*
+                                            Values(@username, @password)";
 
-            _users.Add(newUser);
+                insertUserCommand.Parameters.AddWithValue("username", username);
+                insertUserCommand.Parameters.AddWithValue("password", password);
 
-            return newUser;
+                var reader = insertUserCommand.ExecuteReader(); //want execute reader now since were outputting id
+
+                if (reader.Read())
+                {
+                    // at least 1 row if it gets inside this code block
+                    var insertedUusername = reader["username"].ToString();
+                    var insertedPassword = reader["password"].ToString();
+                    var insertedId = (int)reader["Id"];
+                    var newUser = new User(insertedUusername, insertedPassword) { Id = insertedId };
+
+                    return newUser;
+                }
+            }
+
+            throw new Exception("No user found");
+       
         }
 
         public List<User> GetAll()
         {
             var users = new List<User>();
-            var connection = new SqlConnection("Server=localhost;Database=Sword&Father;Trusted_Connection=True;");
+            var connection = new SqlConnection(ConnectionString);
             connection.Open();
 
             var getAllUsersCommand = connection.CreateCommand();
@@ -30,7 +58,7 @@ namespace SwordAndFather2.Data
 
             var reader = getAllUsersCommand.ExecuteReader();
 
-            while (reader.Read()) // how we get user info out
+            while (reader.Read()) // how we get user info out (reader.read returns a bool)
             {
                 var id = (int)reader["id"]; //if the id isnt forced into an into, error is thrown
                 //var id = reader.GetInt32(0);

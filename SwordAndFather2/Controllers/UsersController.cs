@@ -44,7 +44,7 @@ namespace SwordAndFather2.Controllers
     {
         public bool Validate(CreateUserRequest requestToValidate)
         {
-            return string.IsNullOrEmpty(requestToValidate.Username)
+            return !string.IsNullOrEmpty(requestToValidate.Username)
                    || string.IsNullOrEmpty(requestToValidate.Password);
         }
     }
