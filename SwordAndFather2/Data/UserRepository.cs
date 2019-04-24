@@ -22,9 +22,12 @@ namespace SwordAndFather2.Data
       
                 connection.Open();
                 var insertUserCommand = connection.CreateCommand();
-                insertUserCommand.CommandText = $@"Insert into users (username, password)
+                insertUserCommand.CommandText = @"Insert into users (username, password)
                                             Output inserted.*
-                                            Values('{username}', '{password}'";
+                                            Values(@username, @password)";
+
+                insertUserCommand.Parameters.AddWithValue("username", username);
+                insertUserCommand.Parameters.AddWithValue("password", password);
 
                 var reader = insertUserCommand.ExecuteReader(); //want execute reader now since were outputting id
 
