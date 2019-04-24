@@ -20,24 +20,29 @@ namespace SwordAndFather2.Data
             var connection = new SqlConnection(ConnectionString);
             connection.Open();
 
-            var insertUserCommand = connection.CreateCommand();
-            insertUserCommand.CommandText = @"Insert into users (username, password)
+            try
+            {
+                var insertUserCommand = connection.CreateCommand();
+                insertUserCommand.CommandText = $@"Insert into users (username, password)
                                             Output inserted.*
-                                            Values(@username, @password)";
+                                            Values('{username}', '{password}'";
 
-            var reader = insertUserCommand.ExecuteReader(); //want execute reader now since were outputting id
+                var reader = insertUserCommand.ExecuteReader(); //want execute reader now since were outputting id
 
-            if (reader.Read())
-            {       
-                // at least 1 row if it gets inside this code block
-                var insertedUusername = reader["username"].ToString();
-                var insertedPassword = reader["password"].ToString();
-                var insertedId = (int)reader["Id"];
-                var newUser = new User(insertedUusername, insertedPassword) { Id = insertedId};
+                if (reader.Read())
+                {
+                    // at least 1 row if it gets inside this code block
+                    var insertedUusername = reader["username"].ToString();
+                    var insertedPassword = reader["password"].ToString();
+                    var insertedId = (int)reader["Id"];
+                    var newUser = new User(insertedUusername, insertedPassword) { Id = insertedId };
 
+                    return newUser;
+                }
+            }
+            finally //any code inside finally will also be executed regardless of whether an exception is thrown or not
+            {
                 connection.Close();
-
-                return newUser;
             }
 
 

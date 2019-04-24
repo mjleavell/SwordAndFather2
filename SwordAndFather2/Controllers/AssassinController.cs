@@ -25,7 +25,7 @@ namespace SwordAndFather2.Controllers
         [HttpPost("register")]
         public ActionResult AddAssassin(CreateAssassinRequest request)
         {
-            if (!_validator.Validate(request))
+            if (_validator.Validate(request))
             {
                 return BadRequest();
             }
