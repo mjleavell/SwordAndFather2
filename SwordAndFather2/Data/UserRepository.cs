@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using Dapper;
 using SwordAndFather2.Models;
 
 namespace SwordAndFather2.Data
@@ -17,18 +18,18 @@ namespace SwordAndFather2.Data
             //_users.Add(newUser);
             //return newUser;
 
-            using (var connection = new SqlConnection(ConnectionString)) //IDisposable (using statement is basically a try finally calling IDisposable)
-            {
-      
-                connection.Open();
-                var insertUserCommand = connection.CreateCommand();
+            using (var db = new SqlConnection(ConnectionString)) //IDisposable (using statement is basically a try finally calling IDisposable)
+            {    
+                db.Open();
+
+                var insertUserCommand = db.CreateCommand();
                 insertUserCommand.CommandText = @"Insert into users (username, password)
                                             Output inserted.*
                                             Values(@username, @password)";
 
                 insertUserCommand.Parameters.AddWithValue("username", username);
                 insertUserCommand.Parameters.AddWithValue("password", password);
-
+                
                 var reader = insertUserCommand.ExecuteReader(); //want execute reader now since were outputting id
 
                 if (reader.Read())
@@ -42,35 +43,37 @@ namespace SwordAndFather2.Data
                     return newUser;
                 }
             }
-
-            throw new Exception("No user found");
-       
+            throw new Exception("No user found");     
         }
 
-        public List<User> GetAll()
+        public IEnumerable<User> GetAll()
         {
-            var users = new List<User>();
-            var connection = new SqlConnection(ConnectionString);
-            connection.Open();
-
-            var getAllUsersCommand = connection.CreateCommand();
-            getAllUsersCommand.CommandText = "select * from users"; //what the command is going to execute on the server
-
-            var reader = getAllUsersCommand.ExecuteReader();
-
-            while (reader.Read()) // how we get user info out (reader.read returns a bool)
+            using (var db = new SqlConnection(ConnectionString))
             {
-                var id = (int)reader["id"]; //if the id isnt forced into an into, error is thrown
-                //var id = reader.GetInt32(0);
-                var username = reader["username"].ToString();
-                var password = reader["password"].ToString();
-                var user = new User(username, password) { Id = id };
+                db.Open();
 
-                users.Add(user);
+                // *********** ADO.NET WAY OF DOING THINGS ***********
+                //var getAllUsersCommand = connection.CreateCommand();
+                //getAllUsersCommand.CommandText = "select * from users"; //what the command is going to execute on the server
+
+                //var reader = getAllUsersCommand.ExecuteReader();
+
+                //while (reader.Read()) // how we get user info out (reader.read returns a bool)
+                //{
+                //    var id = (int)reader["id"]; //if the id isnt forced into an into, error is thrown
+                //    var username = reader["username"].ToString();
+                //    var password = reader["password"].ToString();
+                //    var user = new User(username, password) { Id = id };
+
+                //    users.Add(user);
+                //}
+
+                // ********************** DAPPER **********************
+                var users = db.Query<User>("select username, password, id from users"); // <> means generic type and you type in what you want to return
+                
+                return users;
+
             }
-            connection.Close();
-
-            return users;
         }
     }
 }
