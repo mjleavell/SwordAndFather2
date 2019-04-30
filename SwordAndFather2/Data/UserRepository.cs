@@ -50,7 +50,7 @@ namespace SwordAndFather2.Data
         {
             using (var db = new SqlConnection(ConnectionString))
             {
-                db.Open();
+                //db.Open(); // Dapper automatically opens the connection for you
 
                 // *********** ADO.NET WAY OF DOING THINGS ***********
                 //var getAllUsersCommand = connection.CreateCommand();
@@ -69,10 +69,12 @@ namespace SwordAndFather2.Data
                 //}
 
                 // ********************** DAPPER **********************
-                var users = db.Query<User>("select username, password, id from users"); // <> means generic type and you type in what you want to return
+                //var users = db.Query<User>("select username, password, id from users"); // <> means generic type and you type in what you want to return
                 
-                return users;
+                //return users;
 
+                // ********************** SIMPLER DAPPER **********************
+                return db.Query<User>("select username, password, id from users");
             }
         }
     }
