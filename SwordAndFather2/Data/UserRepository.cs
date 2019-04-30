@@ -55,7 +55,7 @@ namespace SwordAndFather2.Data
                         new { username, password, }); // new {} is an anonymous type (same as lines 32 & 33) //setting properties                      
                                                       //object creating an anonymous type with the same names as the properties/parameters?; 
                                                       // creating a new user with the username and password returned from sql
-
+                                                      //purpose of anonymous object is to set the parameters
                 if (newUser != null)
                 {
                     return newUser;
@@ -96,17 +96,42 @@ namespace SwordAndFather2.Data
             }
         }
 
-        public void DeleteUser(int id)
+        public void DeleteUser(int userId)
         {
             using (var db = new SqlConnection(ConnectionString))
             {
-                var rowsAffected = db.Execute("Delete FROM Users WHERE Id = @id", new { id });
+                var parameter = new { Id = userId };
+                var sql = "Delete FROM Users WHERE Id = @id";
+
+                var rowsAffected = db.Execute(sql, parameter);
 
                 if (rowsAffected != 1)
                 {
                     throw new Exception("it didnt do right");
                 }
             }
+        }
+
+        public User UpdateUser(User userToUpdate)
+        {
+            using (var db = new SqlConnection(ConnectionString))
+            {
+
+                var sql = @"UPDATE users
+                            SET username = @username,
+                                password = @password
+                            WHERE id = @id";
+
+                var rowsAffected = db.Execute(sql, userToUpdate); 
+                        //if there are more properties, those will get passed in too, but we are only using username, password, & id
+
+                if (rowsAffected ==1)
+                {
+                    return userToUpdate;
+                }
+                
+            }
+            throw new Exception("Could not update user");
         }
     }
 }
