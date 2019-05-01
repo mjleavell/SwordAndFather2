@@ -92,7 +92,10 @@ namespace SwordAndFather2.Data
                 //return users;
 
                 // ********************** SIMPLER DAPPER **********************
-                return db.Query<User>("select username, password, id from users");
+                var users = db.Query<User>("select username, password, id from users");
+
+                var target = db.Query<Target>("SELECT * FROM Targets"); // better to be explicit than implicit; probs shouls select only the columns that we want
+
             }
         }
 
