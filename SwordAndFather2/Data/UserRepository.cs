@@ -95,12 +95,25 @@ namespace SwordAndFather2.Data
                 // ********************** SIMPLER DAPPER **********************
                 var users = db.Query<User>("select username, password, id from users").ToList();
 
-                var targets = db.Query<Target>("SELECT * FROM Targets").ToList(); // better to be explicit than implicit; probs shouls select only the columns that we want
+
+                //~~~~~~~~BETTER WAY TO GET USERS AND TARGETS~~~~
+                var targets = new TargetRepository().GetAll();
 
                 foreach (var user in users)
                 {
-                    user.Targets = targets.Where(target => target.UserId == user.Id).ToList();
+                    var matchingTargets = targets.Where(target => target.UserId == user.Id).ToList();
+                    user.Targets = matchingTargets;
                 }
+
+                //~~~~~~~~~~~~~~~~~~~~~ OTHER WAY TO GET USERS AND TARGETS ~~~~~~~~~~~~~~~~~~~~~
+                //var targets = new TargetRepository().GetAll();
+                //foreach (var user in users)
+                //{
+                //    var matchingTargets = targets
+                //        .Where(target => target.UserId == user.Id).ToList();
+
+                //    user.Targets = matchingTargets?.ToList(); // ? takes care of null propigation operator
+                //}
 
                 return users;
             }
