@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using Dapper;
 using SwordAndFather2.Models;
 
@@ -92,10 +93,16 @@ namespace SwordAndFather2.Data
                 //return users;
 
                 // ********************** SIMPLER DAPPER **********************
-                var users = db.Query<User>("select username, password, id from users");
+                var users = db.Query<User>("select username, password, id from users").ToList();
 
-                var target = db.Query<Target>("SELECT * FROM Targets"); // better to be explicit than implicit; probs shouls select only the columns that we want
+                var targets = db.Query<Target>("SELECT * FROM Targets").ToList(); // better to be explicit than implicit; probs shouls select only the columns that we want
 
+                foreach (var user in users)
+                {
+                    user.Targets = targets.Where(x => x.UserId == user.Id).ToList();
+                }
+
+                return users;
             }
         }
 
