@@ -48,5 +48,16 @@ namespace SwordAndFather2.Data
                 throw new Exception("Could not create a new target");
             }
         }
+
+        //public IEnumerable<Target> GetAll()
+        //{
+        //    using (var db = new SqlConnection(ConnectionString))
+        //    {
+        //        var targets = db.Query<Target>("SELECT * FROM Targets").ToList();
+
+        //        return targets;
+        //    }
+        //}
+
     }
 }
