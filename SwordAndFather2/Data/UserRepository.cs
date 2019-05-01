@@ -99,7 +99,7 @@ namespace SwordAndFather2.Data
 
                 foreach (var user in users)
                 {
-                    user.Targets = targets.Where(x => x.UserId == user.Id).ToList();
+                    user.Targets = targets.Where(target => target.UserId == user.Id).ToList();
                 }
 
                 return users;

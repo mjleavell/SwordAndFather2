@@ -26,5 +26,13 @@ namespace SwordAndFather2.Controllers
 
             return Created($"/api/target/{newTarget.Id}", newTarget);
         }
+
+        [HttpGet]
+        public ActionResult GetAllTargets()
+        {
+            var repository = new TargetRepository();
+            var targets = repository.GetAll();
+            return Ok(targets);
+        }
     }
 }

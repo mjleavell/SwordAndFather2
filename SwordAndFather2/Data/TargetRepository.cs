@@ -49,15 +49,15 @@ namespace SwordAndFather2.Data
             }
         }
 
-        //public IEnumerable<Target> GetAll()
-        //{
-        //    using (var db = new SqlConnection(ConnectionString))
-        //    {
-        //        var targets = db.Query<Target>("SELECT * FROM Targets").ToList();
+        public IEnumerable<Target> GetAll()
+        {
+            using (var db = new SqlConnection(ConnectionString))
+            {
+                var targets = db.Query<Target>("SELECT * FROM Targets").ToList();
 
-        //        return targets;
-        //    }
-        //}
+                return targets;
+            }
+        }
 
     }
 }
