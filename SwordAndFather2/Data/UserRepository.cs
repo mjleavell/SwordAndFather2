@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using Dapper;
 using SwordAndFather2.Models;
 
@@ -92,7 +93,29 @@ namespace SwordAndFather2.Data
                 //return users;
 
                 // ********************** SIMPLER DAPPER **********************
-                return db.Query<User>("select username, password, id from users");
+                var users = db.Query<User>("select username, password, id from users").ToList();
+
+
+                //~~~~~~~~BETTER WAY TO GET USERS AND TARGETS~~~~~~~~
+                var targets = new TargetRepository().GetAll();
+
+                foreach (var user in users)
+                {
+                    var matchingTargets = targets.Where(target => target.UserId == user.Id).ToList();
+                    user.Targets = matchingTargets;
+                }
+
+                //~~~~~~~~OTHER WAY TO GET USERS AND TARGETS~~~~~~~~
+                //var targets = new TargetRepository().GetAll();
+                //foreach (var user in users)
+                //{
+                //    var matchingTargets = targets
+                //        .Where(target => target.UserId == user.Id).ToList();
+
+                //    user.Targets = matchingTargets?.ToList(); // ? takes care of null propagation operator
+                //}
+
+                return users;
             }
         }
 
