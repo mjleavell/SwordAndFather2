@@ -96,7 +96,7 @@ namespace SwordAndFather2.Data
                 var users = db.Query<User>("select username, password, id from users").ToList();
 
 
-                //~~~~~~~~BETTER WAY TO GET USERS AND TARGETS~~~~
+                //~~~~~~~~BETTER WAY TO GET USERS AND TARGETS~~~~~~~~
                 var targets = new TargetRepository().GetAll();
 
                 foreach (var user in users)
@@ -105,14 +105,14 @@ namespace SwordAndFather2.Data
                     user.Targets = matchingTargets;
                 }
 
-                //~~~~~~~~~~~~~~~~~~~~~ OTHER WAY TO GET USERS AND TARGETS ~~~~~~~~~~~~~~~~~~~~~
+                //~~~~~~~~OTHER WAY TO GET USERS AND TARGETS~~~~~~~~
                 //var targets = new TargetRepository().GetAll();
                 //foreach (var user in users)
                 //{
                 //    var matchingTargets = targets
                 //        .Where(target => target.UserId == user.Id).ToList();
 
-                //    user.Targets = matchingTargets?.ToList(); // ? takes care of null propigation operator
+                //    user.Targets = matchingTargets?.ToList(); // ? takes care of null propagation operator
                 //}
 
                 return users;
