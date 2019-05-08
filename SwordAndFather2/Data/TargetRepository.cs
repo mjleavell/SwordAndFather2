@@ -11,11 +11,21 @@ namespace SwordAndFather2.Data
 {
     public class TargetRepository
     {
-        const string ConnectionString = "Server=localhost;Database=Sword&Father;Trusted_Connection=True"; //field
+
+        //readonly DbConfiguration _dbConfiguration; //can only set readonly fields in the constructor
+        readonly string _connectionString;
+
+
+        public TargetRepository(DbConfiguration dbConfig)
+        {
+            _connectionString = dbConfig.ConnectionString;
+        }
+
+        //const string ConnectionString = "Server=localhost;Database=Sword&Father;Trusted_Connection=True"; //field
 
         public Target AddTarget(string name, string location, FitnessLevel fitnessLevel, int userId)
         {
-            using (var db = new SqlConnection(ConnectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 var insertQuery = @"
                     INSERT INTO [dbo].[Targets]

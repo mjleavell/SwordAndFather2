@@ -4,21 +4,33 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using SwordAndFather2.Data;
 using SwordAndFather2.Models;
 
 namespace SwordAndFather2.Controllers
 {
+    // BEST PRACTICES: CONTROLLER = WHAT IT NEEDS, NOT HOW TO BUILDSTUFF. WE WANT TO TELL ASP.NET HOW TO BUILD STUFF (STARTUP FILE)
+    // THEN IN THE CONTROLLER, WE CAN TELLIT WHAT WE NEED
+
+
     [Route("api/[controller]")]
     [ApiController]
     public class TargetController : ControllerBase
     {
+        readonly TargetRepository _repo;
+
+        public TargetController(TargetRepository repo) //constructor // i dont care how i am getting a target repo, i just want to get it
+        {
+            _repo = repo;
+        }
+
         [HttpPost]
         public ActionResult AddTarget(CreateTargetRequest createRequest)
         {
-            var repository = new TargetRepository();
+            //var repository = new TargetRepository();
 
-            var newTarget = repository.AddTarget(
+            var newTarget = _repo.AddTarget(
                 createRequest.Name,
                 createRequest.Location,
                 createRequest.FitnessLevel,
