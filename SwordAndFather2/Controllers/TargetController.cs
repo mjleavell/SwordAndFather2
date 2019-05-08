@@ -4,15 +4,27 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using SwordAndFather2.Data;
 using SwordAndFather2.Models;
 
 namespace SwordAndFather2.Controllers
 {
+    // BEST PRACTICES: CONTROLLER = WHAT IT NEEDS, NOT HOW TO BUILDSTUFF. WE WANT TO TELL ASP.NET HOW TO BUILD STUFF (STARTUP FILE)
+    // THEN IN THE CONTROLLER, WE CAN TELLIT WHAT WE NEED
+
+
     [Route("api/[controller]")]
     [ApiController]
     public class TargetController : ControllerBase
     {
+        private TargetRepository _repo;
+
+        public TargetController(TargetRepository repo) //constructor
+        {
+            _repo = repo;
+        }
+
         [HttpPost]
         public ActionResult AddTarget(CreateTargetRequest createRequest)
         {

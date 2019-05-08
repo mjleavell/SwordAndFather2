@@ -17,6 +17,7 @@ namespace SwordAndFather2
             CreateWebHostBuilder(args).Build().Run();
         }
 
+        // this is what builds/starts your app**
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>();

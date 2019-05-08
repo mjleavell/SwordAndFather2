@@ -10,12 +10,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SwordAndFather2.Data;
 
 namespace SwordAndFather2
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration) //configuring host in this file***
         {
             Configuration = configuration;
         }
@@ -25,7 +26,11 @@ namespace SwordAndFather2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // SERVICES.ADDMVC IS WHAT MAKES OUR API WORK***
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.Configure<DbConfiguration>(Configuration);
+            services.AddTransient<TargetRepository>(); //AddTransient = every time someones add this type of class, give them a brand new one ---other less used options AddSingleton, AddScope
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,5 +49,11 @@ namespace SwordAndFather2
             app.UseHttpsRedirection();
             app.UseMvc();
         }
+    }
+
+    public class DbConfiguration
+    {
+        public string ConnectionString { get; set; }
+        public object Value { get; internal set; }
     }
 }
