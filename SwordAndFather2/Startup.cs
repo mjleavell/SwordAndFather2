@@ -30,7 +30,10 @@ namespace SwordAndFather2
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.Configure<DbConfiguration>(Configuration);
+
             services.AddTransient<TargetRepository>(); //AddTransient = every time someones add this type of class, give them a brand new one ---other less used options AddSingleton, AddScope
+
+            //services.AddTransient<ITargetRepository>(builder => builder.GetService<StubTargetRepository>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +57,5 @@ namespace SwordAndFather2
     public class DbConfiguration
     {
         public string ConnectionString { get; set; }
-        public object Value { get; internal set; }
     }
 }

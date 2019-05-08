@@ -13,12 +13,12 @@ namespace SwordAndFather2.Data
     {
 
         //readonly DbConfiguration _dbConfiguration; //can only set readonly fields in the constructor
-        string _connectionString;
+        readonly string _connectionString;
 
 
         public TargetRepository(DbConfiguration dbConfig)
         {
-            _connectionString = dbConfig.Value.ConnectionString;
+            _connectionString = dbConfig.ConnectionString;
         }
 
         //const string ConnectionString = "Server=localhost;Database=Sword&Father;Trusted_Connection=True"; //field

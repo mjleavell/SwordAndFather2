@@ -18,9 +18,9 @@ namespace SwordAndFather2.Controllers
     [ApiController]
     public class TargetController : ControllerBase
     {
-        private TargetRepository _repo;
+        readonly TargetRepository _repo;
 
-        public TargetController(TargetRepository repo) //constructor
+        public TargetController(TargetRepository repo) //constructor // i dont care how i am getting a target repo, i just want to get it
         {
             _repo = repo;
         }
@@ -28,9 +28,9 @@ namespace SwordAndFather2.Controllers
         [HttpPost]
         public ActionResult AddTarget(CreateTargetRequest createRequest)
         {
-            var repository = new TargetRepository();
+            //var repository = new TargetRepository();
 
-            var newTarget = repository.AddTarget(
+            var newTarget = _repo.AddTarget(
                 createRequest.Name,
                 createRequest.Location,
                 createRequest.FitnessLevel,
